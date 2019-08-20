@@ -4,8 +4,8 @@ if [ $# != 3 ]; then
     echo "$0 <Armbian build dir> <userpatches dir> <board>" 1>&2
     exit 1
 fi
-ADIR=$1
-PDIR=$2
+ADIR=`realpath $1`
+PDIR=`realpath $2`
 BOARD=$3
 ARMBIAN_GIT="https://github.com/armbian/build.git"
 
