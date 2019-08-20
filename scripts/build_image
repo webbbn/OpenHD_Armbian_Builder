@@ -1,0 +1,38 @@
+#!/bin/sh
+
+if [ $# != 3 ]; then
+    echo "$0 <Armbian build dir> <userpatches dir> <board>" 1>&2
+    exit 1
+fi
+ADIR=$1
+PDIR=$2
+BOARD=$3
+ARMBIAN_GIT="https://github.com/armbian/build.git"
+
+# Ensure that the patches directory exists.
+if [ ! -d ${PDIR} ]; then
+    echo "Patch directory ${PDIR} does not exist."
+    exit 2
+fi
+
+# Checkout the Armbian git repo or ensure the user specified
+# a valid directory if the directory already exists.
+if [ ! -d ${ADIR} ]; then
+    echo "Cloning ${ARMBIAN_GIT} into ${ADIR}"
+    git clone ${ARMBIAN_GIT} ${ADIR}
+elif [ ! -f ${ADIR}/compile.sh ]; then
+    echo "Missing compile.sh in the Armbian build directory." 1>&2
+    exit 3
+fi
+
+# Change directory into the Armbian build directory
+cd ${ADIR}
+
+# Ensure the board name is valid.
+if [ ! -f config/boards/${BOARD}.conf ]; then
+    echo "Board ${BOARD} is not valid." 1>&2
+    exit 4
+fi
+
+# Everything looks good. Fire up the build!
+sudo ./compile.sh USERPATCHES_PATH=${PDIR} BOARD=${BOARD} BRANCH=next RELEASE=bionic BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no BUILD_MINIMAL=no BSPFREEZ=yes COMPRESS_OUTPUTIMAGE=gz
