@@ -35,4 +35,4 @@ if [ ! -f config/boards/${BOARD}.conf ]; then
 fi
 
 # Everything looks good. Fire up the build!
-sudo ./compile.sh USERPATCHES_PATH=${PDIR} BOARD=${BOARD} BRANCH=next RELEASE=stretch BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no BUILD_MINIMAL=yes BSPFREEZ=yes COMPRESS_OUTPUTIMAGE=gz
+sudo ./compile.sh USERPATCHES_PATH=${PDIR} BOARD=${BOARD} BRANCH=next RELEASE=bionic BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no BUILD_MINIMAL=yes BSPFREEZ=yes COMPRESS_OUTPUTIMAGE=gz

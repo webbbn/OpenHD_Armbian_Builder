@@ -46,6 +46,7 @@ Main() {
 	    apt-get autoremove -y
 	    cp /tmp/overlay/network_interfaces /etc/network/interfaces
 	    sed -i 's/g_serial/g_ether/' /etc/modules
+	    cp /tmp/overlay/resolv.conf /etc
 	fi
 } # Main
 
