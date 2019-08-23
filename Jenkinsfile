@@ -7,5 +7,13 @@ pipeline {
 '''
       }
     }
+    stage('Archive and cleanup') {
+      steps {
+        archiveArtifacts(artifacts: 'ArmbianBuild/output/images/Armbian*img.gz', onlyIfSuccessful: true)
+        archiveArtifacts(artifacts: 'ArmbianBuild/output/debs/*.deb', onlyIfSuccessful: true)
+        sh '''rm -rf ArmbianBuild/output
+'''
+      }
+    }
   }
 }
