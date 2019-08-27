@@ -1,6 +1,11 @@
 pipeline {
   agent any
   stages {
+    stage('Nanopineo2') {
+      steps {
+        sh '''./scripts/build_image ArmbianBuild userpatches nanopineo2'''
+      }
+    }
     stage('Nanopineo4') {
       steps {
         sh '''./scripts/build_image ArmbianBuild userpatches nanopineo4'''
