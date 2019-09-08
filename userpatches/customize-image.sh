@@ -41,6 +41,12 @@ Main() {
 	cp /tmp/overlay/htc_9271-1.4.0.fw /lib/firmware/ath9k_htc
 	chmod 644 /lib/firmware
 
+	# Install the pyric python package
+	mkdir -p /usr/local/lib/python3.6/dist-packages
+	(
+	    cd /usr/local/lib/python3.6/dist-packages
+	    tar xvf /tmp/overlay/pyric.tar.gz
+	)
 	if [ ${BOARD} == "orangepizeroplus2-h3" ]; then
 	    apt-get purge -y network-manager
 	    apt-get autoremove -y
