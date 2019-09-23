@@ -54,6 +54,17 @@ Main() {
 	    sed -i 's/g_serial/g_ether/' /etc/modules
 	    cp /tmp/overlay/resolv.conf /etc
 	fi
+	(
+	    cd /tmp
+	    git clone https://github.com/webbbn/realtime-network-av.git
+	    cp realtime-network-av/conf/wifi_config /tmp/overlay/etc
+	    cp realtime-network-av/services/wifi_config.service /tmp/overlay/systemd/system
+	    cp realtime-network-av/python/configure_wifi.py /tmp/overlay/usr/local/bin
+	    chmod 0644 /tmp/overlay/etc/wifi_config
+	    chmod 0644 /tmp/overlay/systemd/system/wifi_config.service
+	    chmod 0755 /tmp/overlay/usr/local/bin/configure_wifi.py
+	    rm -rf realtime-network-av
+	)
 } # Main
 
 InstallOpenMediaVault() {
