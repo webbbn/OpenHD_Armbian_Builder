@@ -6,6 +6,11 @@ pipeline {
         sh '''./scripts/build_image ArmbianBuild userpatches nanopineo2'''
       }
     }
+    stage('Nanopineoplus2') {
+      steps {
+        sh '''./scripts/build_image ArmbianBuild userpatches nanopineoplus2'''
+      }
+    }
     stage('Nanopineo4') {
       steps {
         sh '''./scripts/build_image ArmbianBuild userpatches nanopineo4'''
