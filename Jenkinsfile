@@ -31,6 +31,21 @@ pipeline {
         sh '''./scripts/build_image ArmbianBuild userpatches nanopiduo2'''
       }
     }
+    stage('Orange Pi Lite 2') {
+      steps {
+        sh '''./scripts/build_image ArmbianBuild userpatches orangepilite2'''
+      }
+    }
+    stage('Orange Pi One Plus') {
+      steps {
+        sh '''./scripts/build_image ArmbianBuild userpatches orangepioneplus'''
+      }
+    }
+    stage('Orange Pi Zero +2 H3') {
+      steps {
+        sh '''./scripts/build_image ArmbianBuild userpatches orangepizeroplus2-h3'''
+      }
+    }
     stage('Archive and cleanup') {
       steps {
         archiveArtifacts(artifacts: 'ArmbianBuild/output/images/Armbian*img.gz', onlyIfSuccessful: true)
