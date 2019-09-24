@@ -8,6 +8,9 @@ ADIR=`realpath $1`
 PDIR=`realpath $2`
 BOARD=$3
 ARMBIAN_GIT="https://github.com/armbian/build.git"
+if [ ${BOARD} == "orangepizeroplus2-h3" ]; then
+    EXTRA_OPTIONS="BRANCH=default"
+fi
 
 # Ensure that the patches directory exists.
 if [ ! -d ${PDIR} ]; then
@@ -35,4 +38,4 @@ if [ ! -f config/boards/${BOARD}.conf ]; then
 fi
 
 # Everything looks good. Fire up the build!
-sudo ./compile.sh USERPATCHES_PATH=${PDIR} BOARD=${BOARD} RELEASE=bionic BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no BUILD_MINIMAL=yes BSPFREEZ=yes COMPRESS_OUTPUTIMAGE=gz
+sudo ./compile.sh USERPATCHES_PATH=${PDIR} BOARD=${BOARD} ${EXTRA_OPTIONS} RELEASE=bionic BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no BUILD_MINIMAL=yes BSPFREEZ=yes COMPRESS_OUTPUTIMAGE=gz
