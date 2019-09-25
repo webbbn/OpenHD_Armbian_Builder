@@ -9,7 +9,7 @@ PDIR=`realpath $2`
 BOARD=$3
 ARMBIAN_GIT="https://github.com/armbian/build.git"
 if [ "${BOARD}" = "orangepizeroplus2-h3" ]; then
-    EXTRA_OPTIONS="BRANCH=default"
+    EXTRA_OPTIONS="BRANCH=next"
 fi
 
 # Ensure that the patches directory exists.

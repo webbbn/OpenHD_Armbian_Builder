@@ -1,0 +1,12 @@
+#!/bin/sh
+
+PDIRID=13EjjjT3AOwCj7TtAWzFiHHwLlre3X3Ig
+DATETIME=`date -Iseconds`
+DIRID=`~/gdrive mkdir -p ${PDIRID} ${DATETIME} | awk '{print $2}'`
+
+for F in ~/workspace/OpenHD_Armbian_Builder_master/ArmbianBuild/output/images/*.gz; do
+    ~/gdrive upload -p ${DIRID} ${F}
+done
+for F in ~/workspace/OpenHD_Armbian_Builder_master/ArmbianBuild/output/debs/*.deb; do
+    ~/gdrive upload -p ${DIRID} ${F}
+done
