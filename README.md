@@ -14,6 +14,7 @@ yes "" | make oldconfig
 - Enable CONFIG_CFG80211_CERTIFICATION_ONUS=y
 - Disable CONFIG_CFG80211_REQUIRE_SIGNED_REGDB is not set
 - Disable CONFIG_CFG80211_CRDA_SUPPORT is not set
+- Disable CONFIG_BT is not set (current broken)
 
 ~~~
 yes "" | make oldconfig
