@@ -47,6 +47,7 @@ Main() {
 	    cd /usr/local/lib/python3.6/dist-packages
 	    tar xvf /tmp/overlay/pyric.tar.gz
 	)
+	# Enable g_ether on the Orange Pi Zero Plus2, which doesn't have ethernet
 	if [ ${BOARD} == "orangepizeroplus2-h3" ]; then
 	    apt-get purge -y network-manager
 	    apt-get autoremove -y
@@ -56,14 +57,16 @@ Main() {
 	fi
 	(
 	    cd /tmp
-	    git clone https://github.com/webbbn/realtime-network-av.git
-	    cp realtime-network-av/conf/wifi_config /tmp/overlay/etc
-	    cp realtime-network-av/services/wifi_config.service /tmp/overlay/systemd/system
-	    cp realtime-network-av/python/configure_wifi.py /tmp/overlay/usr/local/bin
-	    chmod 0644 /tmp/overlay/etc/wifi_config
-	    chmod 0644 /tmp/overlay/systemd/system/wifi_config.service
-	    chmod 0755 /tmp/overlay/usr/local/bin/configure_wifi.py
-	    rm -rf realtime-network-av
+	    git clone https://github.com/webbbn/wifibroadcast_bridge.git
+	    cd wifibroadcast_bridge
+	    mkdir build
+	    cd build
+	    cmake ..
+	    make
+	    cpack
+	    dpkg -i *.deb
+	    cd ../..
+	    rm -rf wifibroadcast_bridge
 	)
 } # Main
 
