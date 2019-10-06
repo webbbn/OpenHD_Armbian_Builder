@@ -47,14 +47,23 @@ Main() {
 	    cd /usr/local/lib/python3.6/dist-packages
 	    tar xvf /tmp/overlay/pyric.tar.gz
 	)
+
+	# Remove NetworkManager, which causes issues with monitor mode
+	apt-get purge -y network-manager
+	apt-get autoremove -y
+
 	# Enable g_ether on the Orange Pi Zero Plus2, which doesn't have ethernet
 	if [ ${BOARD} == "orangepizeroplus2-h3" ]; then
-	    apt-get purge -y network-manager
-	    apt-get autoremove -y
 	    cp /tmp/overlay/network_interfaces /etc/network/interfaces
 	    sed -i 's/g_serial/g_ether/' /etc/modules
 	    cp /tmp/overlay/resolv.conf /etc
+	else
+	    # Add the ethernet interface configuration
+	    printf "auto eth0\niface eth0 inet dhcp\n" >> /etc/network/interfaces
 	fi
+
+	# Install dependencies for wifibroadcast_bridge
+	apt-get install -y python3-udev libpcap0.8
 	(
 	    cd /tmp
 	    git clone https://github.com/webbbn/wifibroadcast_bridge.git

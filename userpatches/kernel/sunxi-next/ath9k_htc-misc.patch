@@ -1,6 +1,7 @@
-diff -urN a/drivers/net/wireless/ath/ath9k/common-init.c b/drivers/net/wireless/ath/ath9k/common-init.c
---- a/drivers/net/wireless/ath/ath9k/common-init.c	2019-06-29 17:20:47.426968379 +0000
-+++ b/drivers/net/wireless/ath/ath9k/common-init.c	2019-06-29 17:13:46.000000000 +0000
+diff --git a/drivers/net/wireless/ath/ath9k/common-init.c b/drivers/net/wireless/ath/ath9k/common-init.c
+index 82de0fadbc95..e428a51db1ea 100644
+--- a/drivers/net/wireless/ath/ath9k/common-init.c
++++ b/drivers/net/wireless/ath/ath9k/common-init.c
 @@ -22,14 +22,14 @@
  	.band = NL80211_BAND_2GHZ, \
  	.center_freq = (_freq), \
@@ -45,7 +46,7 @@ diff -urN a/drivers/net/wireless/ath/ath9k/common-init.c b/drivers/net/wireless/
  	CHAN2G(2412, 0), /* Channel 1 */
  	CHAN2G(2417, 1), /* Channel 2 */
  	CHAN2G(2422, 2), /* Channel 3 */
-@@ -50,7 +70,30 @@
+@@ -50,7 +70,30 @@ static const struct ieee80211_channel ath9k_2ghz_chantable[] = {
  	CHAN2G(2462, 10), /* Channel 11 */
  	CHAN2G(2467, 11), /* Channel 12 */
  	CHAN2G(2472, 12), /* Channel 13 */
@@ -77,7 +78,7 @@ diff -urN a/drivers/net/wireless/ath/ath9k/common-init.c b/drivers/net/wireless/
  };
  
  /* Some 5 GHz radios are actually tunable on XXXX-YYYY
-@@ -58,34 +101,38 @@
+@@ -58,34 +101,38 @@ static const struct ieee80211_channel ath9k_2ghz_chantable[] = {
   * we have calibration data for all cards though to make
   * this static */
  static const struct ieee80211_channel ath9k_5ghz_chantable[] = {
@@ -140,9 +141,10 @@ diff -urN a/drivers/net/wireless/ath/ath9k/common-init.c b/drivers/net/wireless/
  };
  
  /* Atheros hardware rate code addition for short preamble */
-diff -urN a/drivers/net/wireless/ath/ath9k/eeprom_4k.c b/drivers/net/wireless/ath/ath9k/eeprom_4k.c
---- a/drivers/net/wireless/ath/ath9k/eeprom_4k.c	2019-06-29 17:20:47.426968379 +0000
-+++ b/drivers/net/wireless/ath/ath9k/eeprom_4k.c	2019-06-29 17:06:50.000000000 +0000
+diff --git a/drivers/net/wireless/ath/ath9k/eeprom_4k.c b/drivers/net/wireless/ath/ath9k/eeprom_4k.c
+index b8c0a08066a0..f164ffe8a2fd 100644
+--- a/drivers/net/wireless/ath/ath9k/eeprom_4k.c
++++ b/drivers/net/wireless/ath/ath9k/eeprom_4k.c
 @@ -18,6 +18,9 @@
  #include "hw.h"
  #include "ar9002_phy.h"
@@ -153,7 +155,7 @@ diff -urN a/drivers/net/wireless/ath/ath9k/eeprom_4k.c b/drivers/net/wireless/at
  static int ath9k_hw_4k_get_eeprom_ver(struct ath_hw *ah)
  {
  	u16 version = le16_to_cpu(ah->eeprom.map4k.baseEepHeader.version);
-@@ -610,8 +613,11 @@
+@@ -610,8 +613,11 @@ static void ath9k_hw_4k_set_txpower(struct ath_hw *ah,
  	if (test)
  	    return;
  
@@ -167,7 +169,7 @@ diff -urN a/drivers/net/wireless/ath/ath9k/eeprom_4k.c b/drivers/net/wireless/at
  
  	ENABLE_REGWRITE_BUFFER(ah);
  
-@@ -982,10 +988,8 @@
+@@ -982,10 +988,8 @@ static void ath9k_hw_4k_set_board_values(struct ath_hw *ah,
  	if (AR_SREV_9271_10(ah))
  		REG_RMW_FIELD(ah, AR_PHY_RF_CTL3, AR_PHY_TX_END_TO_A2_RX_ON,
  			      pModal->txEndToRxOn);
@@ -180,9 +182,10 @@ diff -urN a/drivers/net/wireless/ath/ath9k/eeprom_4k.c b/drivers/net/wireless/at
  
  	if (ath9k_hw_4k_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_2) {
  		REG_RMW_FIELD(ah, AR_PHY_RF_CTL2, AR_PHY_TX_END_DATA_START,
-diff -urN a/drivers/net/wireless/ath/ath9k/eeprom_9287.c b/drivers/net/wireless/ath/ath9k/eeprom_9287.c
---- a/drivers/net/wireless/ath/ath9k/eeprom_9287.c	2019-06-29 17:20:47.426968379 +0000
-+++ b/drivers/net/wireless/ath/ath9k/eeprom_9287.c	2019-06-29 17:04:13.000000000 +0000
+diff --git a/drivers/net/wireless/ath/ath9k/eeprom_9287.c b/drivers/net/wireless/ath/ath9k/eeprom_9287.c
+index 3caa149b1013..d422913827ae 100644
+--- a/drivers/net/wireless/ath/ath9k/eeprom_9287.c
++++ b/drivers/net/wireless/ath/ath9k/eeprom_9287.c
 @@ -18,6 +18,8 @@
  #include "hw.h"
  #include "ar9002_phy.h"
@@ -192,7 +195,7 @@ diff -urN a/drivers/net/wireless/ath/ath9k/eeprom_9287.c b/drivers/net/wireless/
  #define SIZE_EEPROM_AR9287 (sizeof(struct ar9287_eeprom) / sizeof(u16))
  
  static int ath9k_hw_ar9287_get_eeprom_ver(struct ath_hw *ah)
-@@ -741,8 +743,11 @@
+@@ -741,8 +743,11 @@ static void ath9k_hw_ar9287_set_txpower(struct ath_hw *ah,
  	if (test)
  		return;
  
@@ -206,10 +209,11 @@ diff -urN a/drivers/net/wireless/ath/ath9k/eeprom_9287.c b/drivers/net/wireless/
  
  	ENABLE_REGWRITE_BUFFER(ah);
  
-diff -urN a/drivers/net/wireless/ath/ath9k/hif_usb.h b/drivers/net/wireless/ath/ath9k/hif_usb.h
---- a/drivers/net/wireless/ath/ath9k/hif_usb.h	2019-06-29 17:20:47.426968379 +0000
-+++ b/drivers/net/wireless/ath/ath9k/hif_usb.h	2019-06-29 17:01:22.000000000 +0000
-@@ -61,7 +61,7 @@
+diff --git a/drivers/net/wireless/ath/ath9k/hif_usb.h b/drivers/net/wireless/ath/ath9k/hif_usb.h
+index 7846916aa01d..5f3d21e3a87b 100644
+--- a/drivers/net/wireless/ath/ath9k/hif_usb.h
++++ b/drivers/net/wireless/ath/ath9k/hif_usb.h
+@@ -61,7 +61,7 @@ extern int htc_use_dev_fw;
  #define MAX_PKT_NUM_IN_TRANSFER 10
  
  #define MAX_REG_OUT_URB_NUM  1
@@ -218,10 +222,11 @@ diff -urN a/drivers/net/wireless/ath/ath9k/hif_usb.h b/drivers/net/wireless/ath/
  
  #define MAX_REG_IN_BUF_SIZE 64
  
-diff -urN a/drivers/net/wireless/ath/ath9k/hw.c b/drivers/net/wireless/ath/ath9k/hw.c
---- a/drivers/net/wireless/ath/ath9k/hw.c	2019-06-29 17:20:47.426968379 +0000
-+++ b/drivers/net/wireless/ath/ath9k/hw.c	2019-06-29 16:58:28.000000000 +0000
-@@ -37,6 +37,39 @@
+diff --git a/drivers/net/wireless/ath/ath9k/hw.c b/drivers/net/wireless/ath/ath9k/hw.c
+index b4f7ee423d40..717893b3b838 100644
+--- a/drivers/net/wireless/ath/ath9k/hw.c
++++ b/drivers/net/wireless/ath/ath9k/hw.c
+@@ -37,6 +37,39 @@ MODULE_DESCRIPTION("Support for Atheros 802.11n wireless LAN cards.");
  MODULE_SUPPORTED_DEVICE("Atheros 802.11n WLAN cards");
  MODULE_LICENSE("Dual BSD/GPL");
  
@@ -261,7 +266,7 @@ diff -urN a/drivers/net/wireless/ath/ath9k/hw.c b/drivers/net/wireless/ath/ath9k
  static void ath9k_hw_set_clockrate(struct ath_hw *ah)
  {
  	struct ath_common *common = ath9k_hw_common(ah);
-@@ -1099,7 +1132,7 @@
+@@ -1113,7 +1146,7 @@ void ath9k_hw_init_global_settings(struct ath_hw *ah)
  	}
  
  	/* As defined by IEEE 802.11-2007 17.3.8.6 */
@@ -270,9 +275,10 @@ diff -urN a/drivers/net/wireless/ath/ath9k/hw.c b/drivers/net/wireless/ath/ath9k
  	acktimeout = slottime + sifstime + ack_offset;
  	ctstimeout = acktimeout;
  
-diff -urN a/drivers/net/wireless/ath/ath9k/hw.h b/drivers/net/wireless/ath/ath9k/hw.h
---- a/drivers/net/wireless/ath/ath9k/hw.h	2019-06-29 17:20:47.426968379 +0000
-+++ b/drivers/net/wireless/ath/ath9k/hw.h	2019-06-29 16:54:45.000000000 +0000
+diff --git a/drivers/net/wireless/ath/ath9k/hw.h b/drivers/net/wireless/ath/ath9k/hw.h
+index 68956cdc8c9a..3ee1686f3f4a 100644
+--- a/drivers/net/wireless/ath/ath9k/hw.h
++++ b/drivers/net/wireless/ath/ath9k/hw.h
 @@ -73,7 +73,7 @@
  
  #define ATH9K_RSSI_BAD			-128
@@ -282,9 +288,10 @@ diff -urN a/drivers/net/wireless/ath/ath9k/hw.h b/drivers/net/wireless/ath/ath9k
  
  /* Register read/write primitives */
  #define REG_WRITE(_ah, _reg, _val) \
-diff -urN a/drivers/net/wireless/ath/ath9k/mac.c b/drivers/net/wireless/ath/ath9k/mac.c
---- a/drivers/net/wireless/ath/ath9k/mac.c	2019-06-29 17:20:47.426968379 +0000
-+++ b/drivers/net/wireless/ath/ath9k/mac.c	2019-06-29 16:53:46.000000000 +0000
+diff --git a/drivers/net/wireless/ath/ath9k/mac.c b/drivers/net/wireless/ath/ath9k/mac.c
+index 58d02c19b6d0..c5699e59ad7c 100644
+--- a/drivers/net/wireless/ath/ath9k/mac.c
++++ b/drivers/net/wireless/ath/ath9k/mac.c
 @@ -18,6 +18,12 @@
  #include "hw-ops.h"
  #include <linux/export.h>
@@ -298,7 +305,7 @@ diff -urN a/drivers/net/wireless/ath/ath9k/mac.c b/drivers/net/wireless/ath/ath9
  static void ath9k_hw_set_txq_interrupts(struct ath_hw *ah,
  					struct ath9k_tx_queue_info *qi)
  {
-@@ -216,7 +222,7 @@
+@@ -216,7 +222,7 @@ bool ath9k_hw_set_txq_props(struct ath_hw *ah, int q,
  	if (qinfo->tqi_aifs != ATH9K_TXQ_USEDEFAULT)
  		qi->tqi_aifs = min(qinfo->tqi_aifs, 255U);
  	else
@@ -307,88 +314,3 @@ diff -urN a/drivers/net/wireless/ath/ath9k/mac.c b/drivers/net/wireless/ath/ath9
  	if (qinfo->tqi_cwmin != ATH9K_TXQ_USEDEFAULT) {
  		cw = min(qinfo->tqi_cwmin, 1024U);
  		qi->tqi_cwmin = 1;
-diff -urN a/drivers/net/wireless/ath/regd.c b/drivers/net/wireless/ath/regd.c
---- a/drivers/net/wireless/ath/regd.c	2019-06-29 17:36:11.410968379 +0000
-+++ b/drivers/net/wireless/ath/regd.c	2019-06-29 17:38:30.438968379 +0000
-@@ -33,22 +33,16 @@
-  */
- 
- /* Only these channels all allow active scan on all world regulatory domains */
--#define ATH9K_2GHZ_CH01_11	REG_RULE(2412-10, 2462+10, 40, 0, 20, 0)
-+#define ATH9K_2GHZ_CH01_11	REG_RULE(2312-10, 2462+10, 40, 0, 30, 0)
- 
- /* We enable active scan on these a case by case basis by regulatory domain */
--#define ATH9K_2GHZ_CH12_13	REG_RULE(2467-10, 2472+10, 40, 0, 20,\
--					 NL80211_RRF_NO_IR)
--#define ATH9K_2GHZ_CH14		REG_RULE(2484-10, 2484+10, 40, 0, 20,\
--					 NL80211_RRF_NO_IR | \
--					 NL80211_RRF_NO_OFDM)
-+#define ATH9K_2GHZ_CH12_13	REG_RULE(2467-10, 2472+10, 40, 0, 30, 0)
-+#define ATH9K_2GHZ_CH14		REG_RULE(2484-10, 2732+10, 40, 0, 30, 0)
- 
- /* We allow IBSS on these on a case by case basis by regulatory domain */
--#define ATH9K_5GHZ_5150_5350	REG_RULE(5150-10, 5350+10, 80, 0, 30,\
--					 NL80211_RRF_NO_IR)
--#define ATH9K_5GHZ_5470_5850	REG_RULE(5470-10, 5850+10, 80, 0, 30,\
--					 NL80211_RRF_NO_IR)
--#define ATH9K_5GHZ_5725_5850	REG_RULE(5725-10, 5850+10, 80, 0, 30,\
--					 NL80211_RRF_NO_IR)
-+#define ATH9K_5GHZ_5150_5350	REG_RULE(4920-10, 5350+10, 80, 0, 30, 0)
-+#define ATH9K_5GHZ_5470_5850	REG_RULE(5470-10, 6100+10, 80, 0, 30, 0)
-+#define ATH9K_5GHZ_5725_5850	REG_RULE(5725-10, 6100+10, 80, 0, 30, 0)
- 
- #define ATH9K_2GHZ_ALL		ATH9K_2GHZ_CH01_11, \
- 				ATH9K_2GHZ_CH12_13, \
-@@ -77,9 +71,8 @@
- 	.n_reg_rules = 4,
- 	.alpha2 =  "99",
- 	.reg_rules = {
--		ATH9K_2GHZ_CH01_11,
--		ATH9K_2GHZ_CH12_13,
--		ATH9K_5GHZ_NO_MIDBAND,
-+		ATH9K_2GHZ_ALL,
-+		ATH9K_5GHZ_ALL,
- 	}
- };
- 
-@@ -88,8 +81,8 @@
- 	.n_reg_rules = 3,
- 	.alpha2 =  "99",
- 	.reg_rules = {
--		ATH9K_2GHZ_CH01_11,
--		ATH9K_5GHZ_NO_MIDBAND,
-+		ATH9K_2GHZ_ALL,
-+		ATH9K_5GHZ_ALL,
- 	}
- };
- 
-@@ -98,7 +91,7 @@
- 	.n_reg_rules = 3,
- 	.alpha2 =  "99",
- 	.reg_rules = {
--		ATH9K_2GHZ_CH01_11,
-+		ATH9K_2GHZ_ALL,
- 		ATH9K_5GHZ_ALL,
- 	}
- };
-@@ -108,8 +101,7 @@
- 	.n_reg_rules = 4,
- 	.alpha2 =  "99",
- 	.reg_rules = {
--		ATH9K_2GHZ_CH01_11,
--		ATH9K_2GHZ_CH12_13,
-+		ATH9K_2GHZ_ALL,
- 		ATH9K_5GHZ_ALL,
- 	}
- };
-@@ -258,9 +250,7 @@
- 			      struct ath_regulatory *reg)
- 
- {
--	if (reg->country_code == CTRY_INDIA)
--		return (center_freq >= 5500 && center_freq <= 5700);
--	return (center_freq >= 5260 && center_freq <= 5700);
-+	return 0;
- }
- 
- static void ath_force_clear_no_ir_chan(struct wiphy *wiphy,
