@@ -63,7 +63,7 @@ Main() {
 	fi
 
 	# Install dependencies for wifibroadcast_bridge
-	apt-get install -y python3-udev libpcap0.8
+	apt-get install -y python3-pyudev libpcap0.8-dev
 	(
 	    cd /tmp
 	    git clone https://github.com/webbbn/wifibroadcast_bridge.git
