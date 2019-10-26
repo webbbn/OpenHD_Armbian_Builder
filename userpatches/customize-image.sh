@@ -49,34 +49,69 @@ Main() {
 	)
 
 	# Remove NetworkManager, which causes issues with monitor mode
-	#apt-get purge -y network-manager
-	#apt-get autoremove -y
+	apt-get purge -y network-manager
+	apt-get autoremove -y
 
 	# Enable g_ether on the Orange Pi Zero Plus2, which doesn't have ethernet
 	if [ ${BOARD} == "orangepizeroplus2-h3" ]; then
 	    cp /tmp/overlay/network_interfaces /etc/network/interfaces
 	    sed -i 's/g_serial/g_ether/' /etc/modules
 	    cp /tmp/overlay/resolv.conf /etc
-	#else
+	else
 	    # Add the ethernet interface configuration
-	    #printf "auto eth0\niface eth0 inet dhcp\n" >> /etc/network/interfaces
+	    printf "auto eth0\niface eth0 inet dhcp\n" >> /etc/network/interfaces
 	fi
 
 	# Install dependencies for wifibroadcast_bridge
 	apt-get install -y python3-pyudev libpcap0.8-dev
+
+	# Install wifibroadcast_bridge
 	(
 	    cd /tmp
 	    git clone https://github.com/webbbn/wifibroadcast_bridge.git
 	    cd wifibroadcast_bridge
 	    mkdir build
 	    cd build
-	    cmake ..
+	    cmake -DCMAKE_INSTALL_PREFIX=/ ..
 	    make
 	    cpack
 	    dpkg -i *.deb
 	    cd ../..
 	    rm -rf wifibroadcast_bridge
 	)
+
+	# Install the patches to the wifi regulations database
+	(
+	    cd /tmp
+
+	    # Download the source tarballs
+	    wget https://git.kernel.org/pub/scm/linux/kernel/git/sforshee/wireless-regdb.git/snapshot/wireless-regdb-master-2019-06-03.tar.gz
+	    wget https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/crda.git/snapshot/crda-4.14.tar.gz
+
+	    # Untar them
+	    tar xfv crda-4.14.tar.gz
+	    tar xfv wireless-regdb-master-2019-06-03.tar.gz
+
+	    # Build the wireless-regdb package
+	    (
+		cd wireless-regdb-master-2019-06-03
+		cp /tmp/overlay/db.txt .
+		make DISTRO_PRIVKEY=wireless-distro.key.priv.pem DISTRO_PUBKEY=wireless-distro.key.priv.pem REGDB_PRIVKEY=wireless-regdb.key.priv.pem
+		cp regulatory.db regulatory.db.p7s /lib/firmware/
+		cp regulatory.bin /lib/crda/
+		cp *.pub.pem ../crda-4.14/pubkeys
+		cp /lib/crda/pubkeys/*@*pub.pem ../crda-4.14/pubkeys/
+	    )
+
+	    # Build the crda package
+	    (
+		cd crda-4.14/
+		make REG_BIN=/lib/crda/regulatory.bin 
+		make REG_BIN=/lib/crda/regulatory.bin install
+	    )
+	)
+	
+	
 } # Main
 
 InstallOpenMediaVault() {
