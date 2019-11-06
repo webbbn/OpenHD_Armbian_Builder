@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/webbbn/OpenHD_Armbian_Builder/workflows/build-nanopiduo2/badge.svg)
+
 # OpenHD_Armbian_Builder
 Scripts for building and OpenHD image using Armbian
 
