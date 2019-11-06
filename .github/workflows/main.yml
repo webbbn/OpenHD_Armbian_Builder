@@ -20,7 +20,8 @@ jobs:
     - name: build-image
       run: |
         cd ArmbianBuild
-        TERM=xterm sudo ./compile.sh docker USERPATCHES_PATH=../userpatches BOARD=nanopiduo2 RELEASE=bionic BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no BUILD_MINIMAL=yes BSPFREEZ=yes COMPRESS_OUTPUTIMAGE=gz
+        sudo docker build -t lib .
+        sudo docker run -i -P --privileged lib /root/compile.sh USERPATCHES_PATH=../userpatches BOARD=nanopiduo2 RELEASE=bionic BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no BUILD_MINIMAL=yes BSPFREEZ=yes COMPRESS_OUTPUTIMAGE=gz
     - name: upload-artifact
       uses: actions/upload-artifact@v1.0.0
       with:
