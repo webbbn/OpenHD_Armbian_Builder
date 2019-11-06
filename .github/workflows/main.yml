@@ -9,10 +9,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - name: clone-armbian
+      run: git clone https://github.com/armbian/build.git ArmbianBuild
+    - name: install-docker
+      run: |
+        apt-key adv --keyserver pool.sks-keyservers.net --recv-keys 0EBFCD88 
+        echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable" > /etc/apt/sources.list.d/docker.list
+        apt update
+        apt install docker-ce
     - name: build-image
-      run: sudo scripts/build_image ArmbianBuild userpatches nanopiduo2
+      run: |
+        cd ArmbianBuild
+        sudo ./compile.sh docker USERPATCHES_PATH=../userpatches BOARD=nanopiduo2 RELEASE=bionic BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no BUILD_MINIMAL=yes BSPFREEZ=yes COMPRESS_OUTPUTIMAGE=gz
     - name: upload-artifact
       uses: actions/upload-artifact@v1.0.0
       with:
         name: nanopiduo2
-        path: ArmbianBuild/output/images/Armbian*
+        path: ArmbianBuild/output/images
