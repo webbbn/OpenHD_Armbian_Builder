@@ -1,0 +1,19 @@
+  
+name: build-nanopineo2
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: build-image
+      run: sudo scripts/build_image ArmbianBuild userpatches nanopineo2
+    - name: upload-artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: nanopineo2
+        path: ArmbianBuild/output/images
