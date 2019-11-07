@@ -40,6 +40,7 @@ Main() {
 	mkdir /lib/firmware/ath9k_htc
 	cp /tmp/overlay/htc_9271-1.4.0.fw /lib/firmware/ath9k_htc
 	chmod 644 /lib/firmware
+	cp -r /tmp/overlay/etc /etc
 
 	# Install the pyric python package
 	mkdir -p /usr/local/lib/python3.6/dist-packages
@@ -78,6 +79,9 @@ Main() {
 	    dpkg -i *.deb
 	    cd ../..
 	    rm -rf wifibroadcast_bridge
+	    # Enable by default
+	    systemctl enable wifi_config
+	    systemctl enable wfb_bridge
 	)
 
 	# Install the patches to the wifi regulations database
