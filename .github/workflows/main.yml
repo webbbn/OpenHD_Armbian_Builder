@@ -9,10 +9,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: install-dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y apt-cacher-ng
     - name: build-image
       run: sudo scripts/build_image ArmbianBuild userpatches nanopiduo2
     - name: upload-artifact
