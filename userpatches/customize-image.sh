@@ -71,6 +71,7 @@ Main() {
 	    cd /tmp
 	    git clone https://github.com/webbbn/wifibroadcast_bridge.git
 	    cd wifibroadcast_bridge
+	    git submodule update --init
 	    mkdir build
 	    cd build
 	    cmake -DCMAKE_INSTALL_PREFIX=/ ..
