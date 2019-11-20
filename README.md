@@ -1,4 +1,4 @@
-[![Actions Status](https://github.com/webbbn/OpenHD_Armbian_Builder/workflows/build-nanopiduo2/badge.svg)
+[![Actions Status](https://github.com/webbbn/OpenHD_Armbian_Builder/workflows/build-nanopiduo2/badge.svg) [![Actions Status](https://github.com/webbbn/OpenHD_Armbian_Builder/workflows/build-nanopineo2/badge.svg) [![Actions Status](https://github.com/webbbn/OpenHD_Armbian_Builder/workflows/build-nanopifire3/badge.svg)
 
 # OpenHD_Armbian_Builder
 Scripts for building and OpenHD image using Armbian
