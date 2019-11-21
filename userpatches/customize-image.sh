@@ -61,7 +61,7 @@ Main() {
 	#else
 	    # Add the ethernet interface configuration
 	#    printf "auto eth0\niface eth0 inet dhcp\n" >> /etc/network/interfaces
-	#fi
+	fi
 
 	# Install wifibroadcast_bridge
 	(
