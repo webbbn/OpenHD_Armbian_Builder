@@ -19,9 +19,11 @@ BUILD_DESKTOP=$4
 Main() {
 
     # Add the PPA
+    sudo apt-get -y install software-properties-common
     add-apt-repository ppa:webbbn/ppa
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 5C69612679453DE1
     apt-get update
-    apt-get install wifibroadcast-bridge
+    apt-get install -y wifibroadcast-bridge
 
     # Enable the services
     systemctl enable wifi_config
