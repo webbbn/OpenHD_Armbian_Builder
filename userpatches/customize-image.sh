@@ -17,6 +17,16 @@ BOARD=$3
 BUILD_DESKTOP=$4
 
 Main() {
+
+    # Add the PPA
+    add-apt-repository ppa:webbbn/ppa
+    apt-get update
+    apt-get install wifibroadcast-bridge
+
+    # Enable the services
+    systemctl enable wifi_config
+    systemctl enable wfb_bridge
+
     # Copy the overlay files onto the image
     cp -a /tmp/overlay/etc /tmp/overlay/lib /
 
@@ -54,34 +64,11 @@ Main() {
 	sed -i 's/nanopiduo2/openhd-ng-air/g' /etc/hostname
 	sed -i 's/nanopiduo2/openhd-ng-air/g' /etc/hosts
     fi
-    
-    # Install wifibroadcast_bridge
-    install_wfb_bridge
 
     # Install the patches to the wifi regulations database
     patch_regdb
     
 } # Main
-
-install_wfb_bridge() {
-    (
-	cd /tmp
-	git clone https://github.com/webbbn/wifibroadcast_bridge.git
-	cd wifibroadcast_bridge
-	git submodule update --init
-	mkdir build
-	cd build
-	cmake -DCMAKE_INSTALL_PREFIX=/ ..
-	make
-	cpack
-	dpkg -i *.deb
-	cd ../..
-	rm -rf wifibroadcast_bridge
-	# Enable by default
-	systemctl enable wifi_config
-	systemctl enable wfb_bridge
-    )
-}
 
 
 patch_regdb() {
