@@ -18,19 +18,25 @@ BUILD_DESKTOP=$4
 
 Main() {
 
-    # Add the PPA
-    sudo apt-get -y install software-properties-common
-    add-apt-repository ppa:webbbn/ppa
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 5C69612679453DE1
-    apt-get update
-    apt-get install -y wifibroadcast-bridge
+    # Copy the overlay files onto the image
+    cp -a /tmp/overlay/etc /tmp/overlay/lib /
+
+    # Install from the PPA
+    if [ ${BOARD} == "nanopiduo2" ]; then
+	wget -O wfb.zip https://github.com/webbbn/wifibroadcast_bridge/suites/335083085/artifacts/491001
+	unzip wfb.zip
+	dpkg -i deb-file/*armhf.deb
+	rm -rf wfb.zip deb-file
+	wget -O openhd.zip https://github.com/webbbn/Open.HD-NG/suites/335453403/artifacts/494468
+	unzip openhd.zip
+	dpkg -i deb-file/*armhf.deb
+	rm -rf openhd.zip deb-file
+    fi
 
     # Enable the services
     systemctl enable wifi_config
     systemctl enable wfb_bridge
-
-    # Copy the overlay files onto the image
-    cp -a /tmp/overlay/etc /tmp/overlay/lib /
+    systemctl enable openhd
 
     # Install the pyric python package
     mkdir -p /usr/local/lib/python3.6/dist-packages
