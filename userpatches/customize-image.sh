@@ -23,11 +23,11 @@ Main() {
 
     # Install from the PPA
     if [ ${BOARD} == "nanopiduo2" ]; then
-	wget -O wfb.zip https://github.com/webbbn/wifibroadcast_bridge/suites/335083085/artifacts/491001
+	wget -O wfb.zip https://github.com/webbbn/wifibroadcast_bridge/suites/335754305/artifacts/497812
 	unzip wfb.zip
 	dpkg -i deb-file/*armhf.deb
 	rm -rf wfb.zip deb-file
-	wget -O openhd.zip https://github.com/webbbn/Open.HD-NG/suites/335453403/artifacts/494468
+	wget -O openhd.zip https://github.com/webbbn/Open.HD-NG/suites/335768460/artifacts/498042
 	unzip openhd.zip
 	dpkg -i deb-file/*armhf.deb
 	rm -rf openhd.zip deb-file
