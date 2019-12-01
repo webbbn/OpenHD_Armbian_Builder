@@ -22,15 +22,27 @@ Main() {
     cp -a /tmp/overlay/etc /tmp/overlay/lib /
 
     # Install from the PPA
-    if [ ${BOARD} == "nanopiduo2" ]; then
-	wget -O wfb.zip https://github.com/webbbn/wifibroadcast_bridge/suites/335754305/artifacts/497812
+    if [ \( ${BOARD} == "nanopiduo2" \) -o \( ${BOARD} == "orangepizeroplus2-h3" \) ]; then
+
+	# Install the wifibroadcast_bridge package
+	wget -O wfb.zip https://github.com/webbbn/wifibroadcast_bridge/suites/336141753/artifacts/502276
 	unzip wfb.zip
 	dpkg -i deb-file/*armhf.deb
 	rm -rf wfb.zip deb-file
-	wget -O openhd.zip https://github.com/webbbn/Open.HD-NG/suites/335768460/artifacts/498042
+
+	# Install the Open.HD-NG package
+	wget -O openhd.zip https://github.com/webbbn/Open.HD-NG/suites/336114028/artifacts/502013
 	unzip openhd.zip
 	dpkg -i deb-file/*armhf.deb
 	rm -rf openhd.zip deb-file
+
+	if [ ${BOARD} == "nanopiduo2" ]; then
+	    # The UART on the nanopi duo2 is on /dev/ttyS1
+	    sed -i 's/ttyS0/ttyS1/' /etc/default/openhd
+	else
+	    # Change the default setting to ground
+	    sed -i 's/air/ground/' /etc/default/wfb_bridge
+	fi
     fi
 
     # Enable the services
@@ -62,17 +74,19 @@ Main() {
 	printf "auto eth0\niface eth0 inet dhcp\n" >> /etc/network/interfaces
     fi
 
-    # Enable the second UART on the nanopi duo2
+    # Enable the second UARTS on the nanopi duo2
     if [ ${BOARD} == "nanopiduo2" ]; then
-	sed -i '/overlays/ s/$/ uart2/' /boot/armbianEnv.txt
+	sed -i '/overlays/ s/$/ uart1 uart2/' /boot/armbianEnv.txt
     fi
 
     # Change the hostname on the nanopi duo2
     if [ ${BOARD} == "nanopiduo2" ]; then
 	sed -i 's/nanopiduo2/openhd-ng-air/g' /etc/hostname
 	sed -i 's/nanopiduo2/openhd-ng-air/g' /etc/hosts
+    else
+	sed -i 's/nanopiduo2/openhd-ng-ground/g' /etc/hostname
+	sed -i 's/nanopiduo2/openhd-ng-ground/g' /etc/hosts
     fi
-
     # Install the patches to the wifi regulations database
     patch_regdb
     

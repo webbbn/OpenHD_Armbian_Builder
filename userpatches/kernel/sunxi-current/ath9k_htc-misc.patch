@@ -1,5 +1,5 @@
 diff --git a/drivers/net/wireless/ath/ath9k/common-init.c b/drivers/net/wireless/ath/ath9k/common-init.c
-index 82de0fadbc95..e428a51db1ea 100644
+index 82de0fadb..38bc5f0c0 100644
 --- a/drivers/net/wireless/ath/ath9k/common-init.c
 +++ b/drivers/net/wireless/ath/ath9k/common-init.c
 @@ -22,14 +22,14 @@
@@ -19,7 +19,7 @@ index 82de0fadbc95..e428a51db1ea 100644
  }
  
  /* Some 2 GHz radios are actually tunable on 2312-2732
-@@ -37,6 +37,26 @@
+@@ -37,6 +37,27 @@
   * we have calibration data for all cards though to make
   * this static */
  static const struct ieee80211_channel ath9k_2ghz_chantable[] = {
@@ -42,11 +42,12 @@ index 82de0fadbc95..e428a51db1ea 100644
 +	CHAN2G(2392, 50), /* Channel XX */
 +	CHAN2G(2397, 51), /* Channel XX */
 +	CHAN2G(2402, 52), /* Channel XX */
-+	CHAN2G(2407, 53), /* Channel XX */
++	CHAN2G(2407, 53), /* Channel XX */	
++	
  	CHAN2G(2412, 0), /* Channel 1 */
  	CHAN2G(2417, 1), /* Channel 2 */
  	CHAN2G(2422, 2), /* Channel 3 */
-@@ -50,7 +70,30 @@ static const struct ieee80211_channel ath9k_2ghz_chantable[] = {
+@@ -50,7 +71,30 @@ static const struct ieee80211_channel ath9k_2ghz_chantable[] = {
  	CHAN2G(2462, 10), /* Channel 11 */
  	CHAN2G(2467, 11), /* Channel 12 */
  	CHAN2G(2472, 12), /* Channel 13 */
@@ -74,11 +75,11 @@ index 82de0fadbc95..e428a51db1ea 100644
 +	CHAN2G(2672, 30), /* Channel XX */
 +	CHAN2G(2692, 31), /* Channel XX */
 +	CHAN2G(2712, 32), /* Channel XX */
-+	CHAN2G(2732, 33), /* Channel XX */
++	CHAN2G(2732, 33), /* Channel XX */	
  };
  
  /* Some 5 GHz radios are actually tunable on XXXX-YYYY
-@@ -58,34 +101,38 @@ static const struct ieee80211_channel ath9k_2ghz_chantable[] = {
+@@ -58,34 +102,38 @@ static const struct ieee80211_channel ath9k_2ghz_chantable[] = {
   * we have calibration data for all cards though to make
   * this static */
  static const struct ieee80211_channel ath9k_5ghz_chantable[] = {
@@ -91,19 +92,15 @@ index 82de0fadbc95..e428a51db1ea 100644
 -	CHAN5G(5200, 15), /* Channel 40 */
 -	CHAN5G(5220, 16), /* Channel 44 */
 -	CHAN5G(5240, 17), /* Channel 48 */
-+	CHAN5G(5180, 58), /* Channel 36 */
-+	CHAN5G(5200, 59), /* Channel 40 */
-+	CHAN5G(5220, 60), /* Channel 44 */
-+	CHAN5G(5240, 61), /* Channel 48 */
- 	/* _We_ call this UNII 2 */
--	CHAN5G(5260, 18), /* Channel 52 */
--	CHAN5G(5280, 19), /* Channel 56 */
--	CHAN5G(5300, 20), /* Channel 60 */
--	CHAN5G(5320, 21), /* Channel 64 */
 +	CHAN5G(5260, 62), /* Channel 52 */
 +	CHAN5G(5280, 63), /* Channel 56 */
 +	CHAN5G(5300, 64), /* Channel 60 */
 +	CHAN5G(5320, 65), /* Channel 64 */
+ 	/* _We_ call this UNII 2 */
+ 	CHAN5G(5260, 18), /* Channel 52 */
+ 	CHAN5G(5280, 19), /* Channel 56 */
+ 	CHAN5G(5300, 20), /* Channel 60 */
+ 	CHAN5G(5320, 21), /* Channel 64 */
  	/* _We_ call this "Middle band" */
 -	CHAN5G(5500, 22), /* Channel 100 */
 -	CHAN5G(5520, 23), /* Channel 104 */
@@ -142,7 +139,7 @@ index 82de0fadbc95..e428a51db1ea 100644
  
  /* Atheros hardware rate code addition for short preamble */
 diff --git a/drivers/net/wireless/ath/ath9k/eeprom_4k.c b/drivers/net/wireless/ath/ath9k/eeprom_4k.c
-index b8c0a08066a0..f164ffe8a2fd 100644
+index e8c2cc03b..0c525497a 100644
 --- a/drivers/net/wireless/ath/ath9k/eeprom_4k.c
 +++ b/drivers/net/wireless/ath/ath9k/eeprom_4k.c
 @@ -18,6 +18,9 @@
@@ -155,13 +152,14 @@ index b8c0a08066a0..f164ffe8a2fd 100644
  static int ath9k_hw_4k_get_eeprom_ver(struct ath_hw *ah)
  {
  	u16 version = le16_to_cpu(ah->eeprom.map4k.baseEepHeader.version);
-@@ -610,8 +613,11 @@ static void ath9k_hw_4k_set_txpower(struct ath_hw *ah,
+@@ -611,8 +614,12 @@ static void ath9k_hw_4k_set_txpower(struct ath_hw *ah,
  	if (test)
  	    return;
  
 -	for (i = 0; i < Ar5416RateSize; i++)
 -		ratesArray[i] -= AR5416_PWR_TABLE_OFFSET_DB * 2;
 +	for (i = 0; i < Ar5416RateSize; i++) {
++//		ratesArray[i] -= AR5416_PWR_TABLE_OFFSET_DB * 2;
 +		ratesArray[i] = tx_power_man;
 +	}
 +
@@ -169,7 +167,7 @@ index b8c0a08066a0..f164ffe8a2fd 100644
  
  	ENABLE_REGWRITE_BUFFER(ah);
  
-@@ -982,10 +988,8 @@ static void ath9k_hw_4k_set_board_values(struct ath_hw *ah,
+@@ -983,10 +990,9 @@ static void ath9k_hw_4k_set_board_values(struct ath_hw *ah,
  	if (AR_SREV_9271_10(ah))
  		REG_RMW_FIELD(ah, AR_PHY_RF_CTL3, AR_PHY_TX_END_TO_A2_RX_ON,
  			      pModal->txEndToRxOn);
@@ -177,13 +175,14 @@ index b8c0a08066a0..f164ffe8a2fd 100644
 -		      pModal->thresh62);
 -	REG_RMW_FIELD(ah, AR_PHY_EXT_CCA0, AR_PHY_EXT_CCA0_THRESH62,
 -		      pModal->thresh62);
++				  
 +	REG_RMW_FIELD(ah, AR_PHY_CCA, AR9280_PHY_CCA_THRESH62, thresh62_man);
 +	REG_RMW_FIELD(ah, AR_PHY_EXT_CCA0, AR_PHY_EXT_CCA0_THRESH62, thresh62_man);
  
  	if (ath9k_hw_4k_get_eeprom_rev(ah) >= AR5416_EEP_MINOR_VER_2) {
  		REG_RMW_FIELD(ah, AR_PHY_RF_CTL2, AR_PHY_TX_END_DATA_START,
 diff --git a/drivers/net/wireless/ath/ath9k/eeprom_9287.c b/drivers/net/wireless/ath/ath9k/eeprom_9287.c
-index 3caa149b1013..d422913827ae 100644
+index 3caa149b1..2b1b75a73 100644
 --- a/drivers/net/wireless/ath/ath9k/eeprom_9287.c
 +++ b/drivers/net/wireless/ath/ath9k/eeprom_9287.c
 @@ -18,6 +18,8 @@
@@ -195,13 +194,14 @@ index 3caa149b1013..d422913827ae 100644
  #define SIZE_EEPROM_AR9287 (sizeof(struct ar9287_eeprom) / sizeof(u16))
  
  static int ath9k_hw_ar9287_get_eeprom_ver(struct ath_hw *ah)
-@@ -741,8 +743,11 @@ static void ath9k_hw_ar9287_set_txpower(struct ath_hw *ah,
+@@ -741,8 +743,12 @@ static void ath9k_hw_ar9287_set_txpower(struct ath_hw *ah,
  	if (test)
  		return;
  
 -	for (i = 0; i < Ar5416RateSize; i++)
 -		ratesArray[i] -= AR9287_PWR_TABLE_OFFSET_DB * 2;
 +	for (i = 0; i < Ar5416RateSize; i++) {
++//		ratesArray[i] -= AR9287_PWR_TABLE_OFFSET_DB * 2;
 +		ratesArray[i] = tx_power_man;
 +	}
 +
@@ -210,7 +210,7 @@ index 3caa149b1013..d422913827ae 100644
  	ENABLE_REGWRITE_BUFFER(ah);
  
 diff --git a/drivers/net/wireless/ath/ath9k/hif_usb.h b/drivers/net/wireless/ath/ath9k/hif_usb.h
-index 7846916aa01d..5f3d21e3a87b 100644
+index 7846916aa..5f3d21e3a 100644
 --- a/drivers/net/wireless/ath/ath9k/hif_usb.h
 +++ b/drivers/net/wireless/ath/ath9k/hif_usb.h
 @@ -61,7 +61,7 @@ extern int htc_use_dev_fw;
@@ -223,7 +223,7 @@ index 7846916aa01d..5f3d21e3a87b 100644
  #define MAX_REG_IN_BUF_SIZE 64
  
 diff --git a/drivers/net/wireless/ath/ath9k/hw.c b/drivers/net/wireless/ath/ath9k/hw.c
-index b4f7ee423d40..717893b3b838 100644
+index 052deffb4..990b1b316 100644
 --- a/drivers/net/wireless/ath/ath9k/hw.c
 +++ b/drivers/net/wireless/ath/ath9k/hw.c
 @@ -37,6 +37,39 @@ MODULE_DESCRIPTION("Support for Atheros 802.11n wireless LAN cards.");
@@ -266,17 +266,18 @@ index b4f7ee423d40..717893b3b838 100644
  static void ath9k_hw_set_clockrate(struct ath_hw *ah)
  {
  	struct ath_common *common = ath9k_hw_common(ah);
-@@ -1113,7 +1146,7 @@ void ath9k_hw_init_global_settings(struct ath_hw *ah)
+@@ -1113,7 +1146,8 @@ void ath9k_hw_init_global_settings(struct ath_hw *ah)
  	}
  
  	/* As defined by IEEE 802.11-2007 17.3.8.6 */
 -	slottime += 3 * ah->coverage_class;
++//	slottime += 3 * ah->coverage_class;
 +	slottime = slottime_man;
  	acktimeout = slottime + sifstime + ack_offset;
  	ctstimeout = acktimeout;
  
 diff --git a/drivers/net/wireless/ath/ath9k/hw.h b/drivers/net/wireless/ath/ath9k/hw.h
-index 68956cdc8c9a..3ee1686f3f4a 100644
+index 2e4489700..dda1a73f9 100644
 --- a/drivers/net/wireless/ath/ath9k/hw.h
 +++ b/drivers/net/wireless/ath/ath9k/hw.h
 @@ -73,7 +73,7 @@
@@ -288,29 +289,3 @@ index 68956cdc8c9a..3ee1686f3f4a 100644
  
  /* Register read/write primitives */
  #define REG_WRITE(_ah, _reg, _val) \
-diff --git a/drivers/net/wireless/ath/ath9k/mac.c b/drivers/net/wireless/ath/ath9k/mac.c
-index 58d02c19b6d0..c5699e59ad7c 100644
---- a/drivers/net/wireless/ath/ath9k/mac.c
-+++ b/drivers/net/wireless/ath/ath9k/mac.c
-@@ -18,6 +18,12 @@
- #include "hw-ops.h"
- #include <linux/export.h>
- 
-+extern u8 cwmin_man;
-+extern u8 cwmax_man;
-+extern u8 aifs_man;
-+extern u8 cck_sifs;
-+extern u8 ofdm_sifs;
-+
- static void ath9k_hw_set_txq_interrupts(struct ath_hw *ah,
- 					struct ath9k_tx_queue_info *qi)
- {
-@@ -216,7 +222,7 @@ bool ath9k_hw_set_txq_props(struct ath_hw *ah, int q,
- 	if (qinfo->tqi_aifs != ATH9K_TXQ_USEDEFAULT)
- 		qi->tqi_aifs = min(qinfo->tqi_aifs, 255U);
- 	else
--		qi->tqi_aifs = INIT_AIFS;
-+		qi->tqi_aifs = aifs_man;
- 	if (qinfo->tqi_cwmin != ATH9K_TXQ_USEDEFAULT) {
- 		cw = min(qinfo->tqi_cwmin, 1024U);
- 		qi->tqi_cwmin = 1;
