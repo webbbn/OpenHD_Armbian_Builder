@@ -25,7 +25,7 @@ Main() {
     if [ \( ${BOARD} == "nanopiduo2" \) -o \( ${BOARD} == "orangepizeroplus2-h3" \) ]; then
 
 	# Install the wifibroadcast_bridge package
-	wget -O wfb.zip https://github.com/webbbn/wifibroadcast_bridge/suites/336141753/artifacts/502276
+	wget -O wfb.zip https://github.com/webbbn/wifibroadcast_bridge/suites/336557492/artifacts/505660
 	unzip wfb.zip
 	dpkg -i deb-file/*armhf.deb
 	rm -rf wfb.zip deb-file
@@ -80,13 +80,9 @@ Main() {
     fi
 
     # Change the hostname on the nanopi duo2
-    if [ ${BOARD} == "nanopiduo2" ]; then
-	sed -i 's/nanopiduo2/openhd-ng-air/g' /etc/hostname
-	sed -i 's/nanopiduo2/openhd-ng-air/g' /etc/hosts
-    else
-	sed -i 's/nanopiduo2/openhd-ng-ground/g' /etc/hostname
-	sed -i 's/nanopiduo2/openhd-ng-ground/g' /etc/hosts
-    fi
+    sed -i 's/${BOARD}/openhd-ng/g' /etc/hostname
+    sed -i 's/${BOARD}/openhd-ng/g' /etc/hosts
+
     # Install the patches to the wifi regulations database
     patch_regdb
     
