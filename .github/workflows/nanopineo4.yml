@@ -1,5 +1,5 @@
   
-name: build-nanopineo2
+name: build-nanopineo4
 
 on: [push]
 
@@ -11,9 +11,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: build-image
-      run: sudo scripts/build_image nanopineo2
+      run: sudo scripts/build_image nanopineo4
     - name: upload-artifact
       uses: actions/upload-artifact@v1.0.0
       with:
-        name: nanopineo2
+        name: nanopineo4
         path: armbian/output/images

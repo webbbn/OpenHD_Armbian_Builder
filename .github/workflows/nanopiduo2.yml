@@ -10,9 +10,9 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: build-image
-      run: sudo scripts/build_image ArmbianBuild userpatches nanopiduo2
+      run: sudo scripts/build_image nanopiduo2
     - name: upload-artifact
       uses: actions/upload-artifact@v1.0.0
       with:
         name: nanopiduo2
-        path: ArmbianBuild/output/images
+        path: armbian/output/images
