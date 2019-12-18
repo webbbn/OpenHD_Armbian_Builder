@@ -1,15 +1,28 @@
 #!/bin/sh
 
-if [ $# != 3 ]; then
-    echo "$0 <Armbian build dir> <userpatches dir> <board>" 1>&2
+# Default the release to bionic
+RELEASE=buster
+
+if [ $# -eq 0 ]; then
+    echo "$0 <board> [Armbian build dir] [userpatches dir]" 1>&2
     exit 1
 fi
-ADIR=`realpath $1`
-PDIR=`realpath $2`
-BOARD=$3
+BOARD=$1
+if [ $# -eq 1 ]; then
+    ADIR="${PWD}/armbian"
+else
+    ADIR=`realpath $2`
+fi
+if [ $# -lt 2 ]; then
+    PDIR="${PWD}/userpatches"
+else
+    PDIR=`realpath $3`
+fi
 ARMBIAN_GIT="https://github.com/armbian/build.git"
 if [ "${BOARD}" = "orangepizeroplus2-h3" ]; then
     EXTRA_OPTIONS="BRANCH=next"
+elif [ "${BOARD}" = "nanopineo4" ]; then
+    EXTRA_OPTIONS="BRANCH=legacy"
 fi
 
 # Ensure that the patches directory exists.
@@ -31,6 +44,9 @@ fi
 # Change directory into the Armbian build directory
 cd ${ADIR}
 
+# Print the current git hash
+echo "Current Armbian git hash: `git rev-parse HEAD`"
+
 # Ensure the board name is valid.
 if [ ! -f config/boards/${BOARD}.conf ]; then
     echo "Board ${BOARD} is not valid." 1>&2
@@ -38,4 +54,4 @@ if [ ! -f config/boards/${BOARD}.conf ]; then
 fi
 
 # Everything looks good. Fire up the build!
-sudo ./compile.sh USERPATCHES_PATH=${PDIR} BOARD=${BOARD} ${EXTRA_OPTIONS} RELEASE=bionic BUILD_DESKTOP=no KERNEL_ONLY=NO KERNEL_CONFIGURE=no BUILD_MINIMAL=yes BSPFREEZ=yes NO_APT_CACHER=yes
+sudo ./compile.sh USERPATCHES_PATH=${PDIR} BOARD=${BOARD} ${EXTRA_OPTIONS} RELEASE=${RELEASE} BUILD_DESKTOP=no KERNEL_ONLY=NO KERNEL_CONFIGURE=no BUILD_MINIMAL=yes BSPFREEZ=yes NO_APT_CACHER=yes | tee ${BOARD}.log

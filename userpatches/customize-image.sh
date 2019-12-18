@@ -17,32 +17,34 @@ BOARD=$3
 BUILD_DESKTOP=$4
 
 Main() {
+    echo "RELEASE=${RELEASE}"
 
     # Copy the overlay files onto the image
     cp -a /tmp/overlay/etc /tmp/overlay/lib /
 
-    # Install from the PPA
-    if [ \( ${BOARD} == "nanopiduo2" \) -o \( ${BOARD} == "orangepizeroplus2-h3" \) ]; then
+    # Install the wifibroadcast_bridge package
+    wget -O wfb.zip https://github.com/webbbn/wifibroadcast_bridge/suites/363867671/artifacts/741234
+    unzip wfb.zip
+    if [ ${BOARD} == "nanopineo4" ]; then
+	dpkg -i deb-files/buster-arm64/*.deb
+    else
+	dpkg -i deb-files/buster-armhf/*.deb
+    fi
+    rm -rf wfb.zip deb-files
 
-	# Install the wifibroadcast_bridge package
-	wget -O wfb.zip https://github.com/webbbn/wifibroadcast_bridge/suites/337767612/artifacts/515506
-	unzip wfb.zip
-	dpkg -i deb-file/*armhf.deb
-	rm -rf wfb.zip deb-file
+    # Install the Open.HD-NG package
+    wget -O openhd.zip https://github.com/webbbn/Open.HD-NG/suites/363868282/artifacts/741238
+    unzip openhd.zip
+    if [ ${BOARD} == "nanopineo4" ]; then
+	dpkg -i deb-files/buster-arm64/*.deb
+    else
+	dpkg -i deb-files/buster-armhf/*.deb
+    fi
+    rm -rf openhd.zip deb-files
 
-	# Install the Open.HD-NG package
-	wget -O openhd.zip https://github.com/webbbn/Open.HD-NG/suites/337772441/artifacts/515673
-	unzip openhd.zip
-	dpkg -i deb-file/*armhf.deb
-	rm -rf openhd.zip deb-file
-
-	if [ ${BOARD} == "nanopiduo2" ]; then
-	    # The UART on the nanopi duo2 is on /dev/ttyS1
-	    sed -i 's/ttyS0/ttyS1/' /etc/default/openhd
-	else
-	    # Change the default setting to ground
-	    sed -i 's/air/ground/' /etc/default/wfb_bridge
-	fi
+    if [ ${BOARD} == "nanopiduo2" ]; then
+	# The UART on the nanopi duo2 is on /dev/ttyS1
+	sed -i 's/ttyS0/ttyS1/' /etc/default/openhd
     fi
 
     # Enable the services
@@ -50,28 +52,36 @@ Main() {
     systemctl enable wfb_bridge
     systemctl enable openhd
 
-    # Install the pyric python package
-    mkdir -p /usr/local/lib/python3.6/dist-packages
-    (
-	cd /usr/local/lib/python3.6/dist-packages
-	tar xvf /tmp/overlay/pyric.tar.gz
-    )
-
-    # Install pymavlink
+    # Install pymavlink and pyric
     pip3 install pymavlink
+    pip3 install pyric
 
     # Remove NetworkManager, which causes issues with monitor mode
     apt-get purge -y network-manager
     apt-get autoremove -y
 
+    # Copy the overlay directory to root
+    cp -a /tmp/root/* /
+
     # Enable g_ether on the Orange Pi Zero Plus2, which doesn't have ethernet
     if [ ${BOARD} == "orangepizeroplus2-h3" ]; then
-	cp /tmp/overlay/network_interfaces /etc/network/interfaces
+	echo >> /etc/network/interfaces <<EOF
+auto lo
+iface lo inet loopback
+
+auto usb0
+iface usb0 inet static
+    address 192.168.137.2
+    netmask 255.255.255.0
+    network 192.168.137.0
+    broadcast 192.168.137.255
+    gateway 192.168.137.1
+EOF
 	sed -i 's/g_serial/g_ether/' /etc/modules
-	cp /tmp/overlay/resolv.conf /etc
+	cat "nameserver 192.168.1.1" > /etc/resolv.conf
     else
 	# Add the ethernet interface configuration
-	printf "allow hotplug eth0\niface eth0 inet dhcp\n" >> /etc/network/interfaces
+	printf "auto eth0\niface eth0 inet dhcp\n" >> /etc/network/interfaces
     fi
 
     # Enable the second UARTS on the nanopi duo2

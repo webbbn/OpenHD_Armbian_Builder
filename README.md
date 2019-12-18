@@ -28,7 +28,7 @@ yes "" | make oldconfig
 |---|---|
 | Nanopi Neo2 | sunxi64-next |
 | Nanopi Neo Plus2 | sunxi64-next |
-| Nanopi Neo4 | rk3399-default |
+| Nanopi Neo4 | rk3399-legacy |
 | Nanopi Fire3 | s5p6818-next |
 | Nanopi Neo Core2 | sunxi64-next |
 | Nanopi Duo2 | sun8i-next |
