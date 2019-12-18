@@ -33,7 +33,7 @@ Main() {
     rm -rf wfb.zip deb-files
 
     # Install the Open.HD-NG package
-    wget -O openhd.zip https://github.com/webbbn/Open.HD-NG/suites/363868282/artifacts/741238
+    wget -O openhd.zip https://github.com/webbbn/Open.HD-NG/suites/365127043/artifacts/752063
     unzip openhd.zip
     if [ ${BOARD} == "nanopineo4" ]; then
 	dpkg -i deb-files/buster-arm64/*.deb
