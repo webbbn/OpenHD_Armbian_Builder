@@ -20,7 +20,7 @@ Main() {
     echo "RELEASE=${RELEASE}"
 
     # Copy the overlay files onto the image
-    cp -a /tmp/overlay/etc /tmp/overlay/lib /
+    cp -a /tmp/overlay/root/* /
 
     # Install the wifibroadcast_bridge package
     wget -O wfb.zip https://github.com/webbbn/wifibroadcast_bridge/suites/363867671/artifacts/741234
@@ -59,9 +59,6 @@ Main() {
     # Remove NetworkManager, which causes issues with monitor mode
     apt-get purge -y network-manager
     apt-get autoremove -y
-
-    # Copy the overlay directory to root
-    cp -a /tmp/root/* /
 
     # Enable g_ether on the Orange Pi Zero Plus2, which doesn't have ethernet
     if [ ${BOARD} == "orangepizeroplus2-h3" ]; then
