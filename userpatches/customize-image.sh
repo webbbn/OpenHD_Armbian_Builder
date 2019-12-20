@@ -23,7 +23,7 @@ Main() {
     cp -a /tmp/overlay/root/* /
 
     # Install the wifibroadcast_bridge package
-    wget -O wfb.zip https://github.com/webbbn/wifibroadcast_bridge/suites/363867671/artifacts/741234
+    wget -O wfb.zip https://github.com/webbbn/wifibroadcast_bridge/suites/367757482/artifacts/774947
     unzip wfb.zip
     if [ ${BOARD} == "nanopineo4" ]; then
 	dpkg -i deb-files/buster-arm64/*.deb
@@ -33,7 +33,7 @@ Main() {
     rm -rf wfb.zip deb-files
 
     # Install the Open.HD-NG package
-    wget -O openhd.zip https://github.com/webbbn/Open.HD-NG/suites/365127043/artifacts/752063
+    wget -O openhd.zip https://github.com/webbbn/Open.HD-NG/suites/367695350/artifacts/774350
     unzip openhd.zip
     if [ ${BOARD} == "nanopineo4" ]; then
 	dpkg -i deb-files/buster-arm64/*.deb
