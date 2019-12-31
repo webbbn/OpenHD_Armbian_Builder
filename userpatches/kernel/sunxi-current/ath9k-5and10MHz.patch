@@ -184,10 +184,10 @@ index b3ed65e5c..b9dcb3ed4 100644
  	ath9k_cmn_debug_base_eeprom(priv->debug.debugfs_phy, priv->ah);
  	ath9k_cmn_debug_modal_eeprom(priv->debug.debugfs_phy, priv->ah);
 diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_init.c b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
-index 214c68269..2bfb078d0 100644
+index d961095ab..f5e17470a 100644
 --- a/drivers/net/wireless/ath/ath9k/htc_drv_init.c
 +++ b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
-@@ -750,9 +750,9 @@ static void ath9k_set_hw_capab(struct ath9k_htc_priv *priv,
+@@ -748,9 +748,9 @@ static void ath9k_set_hw_capab(struct ath9k_htc_priv *priv,
  
  	hw->wiphy->flags |= WIPHY_FLAG_IBSS_RSN |
  			    WIPHY_FLAG_HAS_REMAIN_ON_CHANNEL |

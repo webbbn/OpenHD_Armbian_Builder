@@ -1,29 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 
 # Default the release to bionic
 RELEASE=buster
 
 if [ $# -eq 0 ]; then
-    echo "$0 <board> [Armbian build dir] [userpatches dir]" 1>&2
+    echo "$0 <board>" 1>&2
     exit 1
 fi
 BOARD=$1
-if [ $# -eq 1 ]; then
-    ADIR="${PWD}/armbian"
-else
-    ADIR=`realpath $2`
-fi
-if [ $# -lt 2 ]; then
-    PDIR="${PWD}/userpatches"
-else
-    PDIR=`realpath $3`
-fi
-ARMBIAN_GIT="https://github.com/armbian/build.git"
-if [ "${BOARD}" = "orangepizeroplus2-h3" ]; then
-    EXTRA_OPTIONS="BRANCH=next"
-elif [ "${BOARD}" = "nanopineo4" ]; then
-    EXTRA_OPTIONS="BRANCH=legacy"
-fi
+ADIR="${PWD}/armbian"
+PDIR="${PWD}/userpatches"
+BRANCH=current
 
 # Ensure that the patches directory exists.
 if [ ! -d ${PDIR} ]; then
@@ -31,13 +18,12 @@ if [ ! -d ${PDIR} ]; then
     exit 2
 fi
 
-# Checkout the Armbian git repo or ensure the user specified
-# a valid directory if the directory already exists.
+# Ensure that the armbian submodule exists
 if [ ! -d ${ADIR} ]; then
-    echo "Cloning ${ARMBIAN_GIT} into ${ADIR}"
-    git clone ${ARMBIAN_GIT} ${ADIR}
+    echo "Updating armbian submodule"
+    git submodule update --init
 elif [ ! -f ${ADIR}/compile.sh ]; then
-    echo "Missing compile.sh in the Armbian build directory." 1>&2
+    echo "Missing compile.sh in the Armbian build directory: ${ADIR}/compile.sh" 1>&2
     exit 3
 fi
 
@@ -45,7 +31,7 @@ fi
 cd ${ADIR}
 
 # Print the current git hash
-echo "Current Armbian git hash: `git rev-parse HEAD`"
+echo "Current Armbian git hash: `git rev-parse HEAD`" | tee ${BOARD}.log
 
 # Ensure the board name is valid.
 if [ ! -f config/boards/${BOARD}.conf ]; then
@@ -54,4 +40,4 @@ if [ ! -f config/boards/${BOARD}.conf ]; then
 fi
 
 # Everything looks good. Fire up the build!
-sudo ./compile.sh USERPATCHES_PATH=${PDIR} BOARD=${BOARD} ${EXTRA_OPTIONS} RELEASE=${RELEASE} BUILD_DESKTOP=no KERNEL_ONLY=NO KERNEL_CONFIGURE=no BUILD_MINIMAL=yes BSPFREEZ=yes NO_APT_CACHER=yes COMPRESS_OUTPUTIMAGE=7z SEVENZIP=yes | tee ${BOARD}.log
+sudo ./compile.sh USERPATCHES_PATH=${PDIR} BOARD=${BOARD} BRANCH=${BRANCH} ${EXTRA_OPTIONS} RELEASE=${RELEASE} BUILD_DESKTOP=no KERNEL_ONLY=no KERNEL_CONFIGURE=no BUILD_MINIMAL=yes BSPFREEZ=yes NO_APT_CACHER=yes COMPRESS_OUTPUTIMAGE=7z SEVENZIP=yes |& tee -a ${BOARD}.log
