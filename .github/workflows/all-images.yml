@@ -9,6 +9,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - name: update-submodules
+      run: git submodule update --init
     - name: build-nanopiduo2
       run: sudo scripts/build_image nanopiduo2
     - name: build-nanopineo4
