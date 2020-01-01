@@ -18,7 +18,7 @@ jobs:
     - name: build-nanopineoplus2
       run: sudo scripts/build_image nanopineoplus2
     - name: clean
-      run: rm -f armbian/output/images/*.img
+      run: sudo rm -f armbian/output/images/*.img
     - name: upload-artifact
       uses: actions/upload-artifact@v1.0.0
       with:

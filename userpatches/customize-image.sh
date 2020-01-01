@@ -25,7 +25,7 @@ Main() {
     # Install the wifibroadcast_bridge package
     wget -O wfb.zip https://github.com/webbbn/wifibroadcast_bridge/suites/378082072/artifacts/879722
     unzip wfb.zip
-    if [ ${BOARD} == "nanopineo4" ]; then
+    if [ ( ${BOARD} == "nanopineo4" ) -o ( ${BOARD} == "nanopineoplus2" ) ]; then
 	dpkg -i deb-files/buster-arm64/*.deb
     else
 	dpkg -i deb-files/buster-armhf/*.deb
