@@ -15,6 +15,8 @@ jobs:
       run: sudo scripts/build_image nanopiduo2
     - name: build-nanopineo4
       run: sudo scripts/build_image nanopineo4
+    - name: build-nanopim4v2
+      run: sudo scripts/build_image nanopineo4
     - name: build-nanopineoplus2
       run: sudo scripts/build_image nanopineoplus2
     - name: clean

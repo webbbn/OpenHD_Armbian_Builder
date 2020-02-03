@@ -22,68 +22,44 @@ Main() {
     # Copy the overlay files onto the image
     cp -a /tmp/overlay/root/* /
 
-    # Install the wifibroadcast_bridge package
-    wget -O wfb.zip https://github.com/webbbn/wifibroadcast_bridge/suites/378082072/artifacts/879722
-    unzip wfb.zip
-    if [ ( ${BOARD} == "nanopineo4" ) -o ( ${BOARD} == "nanopineoplus2" ) ]; then
-	dpkg -i deb-files/buster-arm64/*.deb
-    else
-	dpkg -i deb-files/buster-armhf/*.deb
-    fi
-    rm -rf wfb.zip deb-files
+    # Install the OpenHD debian repository
+    echo "deb https://dl.bintray.com/webbbn/openhd_test buster testing" >> /etc/apt/sources.list
+    wget -qO - https://bintray.com/user/downloadSubjectPublicKey?username=bintray | apt-key add -
 
-    # Install the Open.HD-NG package
-    wget -O openhd.zip https://github.com/webbbn/Open.HD-NG/suites/378810137/artifacts/887254
-    unzip openhd.zip
-    if [ ${BOARD} == "nanopineo4" ]; then
-	dpkg -i deb-files/buster-arm64/*.deb
-    else
-	dpkg -i deb-files/buster-armhf/*.deb
-    fi
-    rm -rf openhd.zip deb-files
+    # Install the OpenHD packages
+    apt-get update -y
+    apt-get install -y wifibroadcast_bridge open.hd-ng mavlink-router
 
     if [ ${BOARD} == "nanopiduo2" ]; then
 	# The UART on the nanopi duo2 is on /dev/ttyS1
 	sed -i 's/ttyS0/ttyS1/' /etc/default/openhd
     fi
 
-    # Enable the services
-    systemctl enable wifi_config
-    systemctl enable wfb_bridge
-    systemctl enable openhd
-
-    # Install pymavlink and pyric
-    pip3 install pymavlink
-    pip3 install pyric
-
     # Remove NetworkManager, which causes issues with monitor mode
     apt-get purge -y network-manager
     apt-get autoremove -y
-
-    # Add the ethernet interface configuration
-    printf "auto eth0\niface eth0 inet dhcp\n" >> /etc/network/interfaces
 
     # Enable g_ether on the USB OTG port
     sed -i '/g_serial/d' /etc/modules
     echo "g_ether" >> /etc/modules
 
-    # Configure tht network interfaces
-    echo >> /etc/network/interfaces <<EOF
+    # Configure tht ethernet interface
+    cat > /etc/network/interfaces <<EOF
 auto lo
 iface lo inet loopback
 
-auto eth0
+allow-hotplug eth0
     iface eth0 inet dhcp
 
-auto usb0
-iface usb0 inet static
+allow-hotplug usb0
+    iface usb0 inet static
     address 192.168.10.2
     netmask 255.255.255.252
     network 192.168.10.0
     broadcast 192.168.10.3
 EOF
-    echo "nameserver 8.8.8.8" > /etc/resolv.conf
-    echo >> /etc/dnsmasq.conf <<EOF
+
+    cat >> /etc/dnsmasq.conf <<EOF
 listen-address=192.168.10.2
 dhcp-range=192.168.10.1,192.168.10.1,10S
 EOF
@@ -93,20 +69,19 @@ EOF
     DMAC=`printf '00-60-2F-%02X-%02X-%02X\n' $[RANDOM%256] $[RANDOM%256] $[RANDOM%256]`
     echo "options g_ether host_addr=${HMAC} dev_addr=${DMAC}" > /etc/modprobe.d/g_ether.conf
 
-    # Enable the second UARTS on the nanopi duo2
-    if [ ${BOARD} == "nanopiduo2" ]; then
+    # Enable the uarts and usb ports, etc
+    if [ "${BOARD}" == "nanopiduo2" ]; then
 	sed -i '/overlays/ s/$/ uart1 uart2/' /boot/armbianEnv.txt
+    else
+	sed -i '/overlays/ s/$/ uart1 uart2 uart3 usbhost1 usbhost2 usbhost3/' /boot/armbianEnv.txt
     fi
 
     # Change the hostname on the nanopi duo2
-    sed -i 's/${BOARD}/openhd-ng/g' /etc/hostname
-    sed -i 's/${BOARD}/openhd-ng/g' /etc/hosts
+    sed -i "s/${BOARD}/openhd-ng/g" /etc/hostname
+    sed -i "s/${BOARD}/openhd-ng/g" /etc/hosts
 
     # Install the patches to the wifi regulations database
     patch_regdb
-
-    # Do this last just in case it could cause issues with nameserver lookups
-    echo "nameserver 8.8.8.8" > /etc/resolv.conf
     
 } # Main
 
